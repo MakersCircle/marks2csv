@@ -1,1 +1,2 @@
 pandas~=2.2.0
+ipython~=8.15.0

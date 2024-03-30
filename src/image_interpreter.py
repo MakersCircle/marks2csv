@@ -1,8 +1,8 @@
 import pandas as pd
+from IPython.display import display
 
 
 class ImageInterpreter:
-
     def __init__(self):
         self.marks = {}
 
@@ -18,4 +18,4 @@ class ImageInterpreter:
         if self.marks is None:
             print("No Marks Detected.")
         else:
-            print(pd.DataFrame(self.marks))
+            display(pd.DataFrame(self.marks))

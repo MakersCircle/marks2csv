@@ -1,5 +1,5 @@
 # warp the input image
 
 
-def warp():
+def warp(image):
     raise NotImplemented("Warp function is not implemented.")

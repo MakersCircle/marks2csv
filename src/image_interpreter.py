@@ -12,7 +12,7 @@ class ImageInterpreter:
         :return: Dictionary containing marks of each question.
                  If mark = -1 -> Model has no confidence.
         """
-        pass
+
 
     def __str__(self):
         if self.marks is None:

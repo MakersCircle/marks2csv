@@ -67,8 +67,8 @@ def four_point_transform(image, pts):
 	return warped
 
 def warp(image):
-    img_path = '3.jpg'
-    big_img = cv2.imread(img_path)
+    img = image
+    big_img = cv2.imread(img)
 
     ratio = big_img.shape[0] / 500.0
     org = big_img.copy()
@@ -97,10 +97,11 @@ def warp(image):
 
     warped = four_point_transform(org, doc.reshape(4, 2) * ratio)
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-    cv2.imwrite('warpped.jpg', warped) 
-    print(type(warped))
+    #USE WARPED IN THE NEXT STEP OF THE CODE, The output datatype is a numpy array
+
+    #cv2.imwrite('warpped.jpg', warped)         #This line is used to save the warpped (not scanned) image as jpg file.
 
 
-    T = threshold_local(warped, 11, offset = 10, method = "gaussian")
-    warped = (warped > T).astype("uint8") * 255
-    cv2.imwrite('scanned.jpg', warped) 
+    #T = threshold_local(warped, 11, offset = 10, method = "gaussian")
+    #warped = (warped > T).astype("uint8") * 255
+    #cv2.imwrite('scanned.jpg', warped)         #This line is used to save the scanned image as jpg file.

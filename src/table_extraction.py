@@ -43,4 +43,4 @@ def segment(image):
 
 
 if __name__ == '__main__':
-    segment('test_imgs\warpped\warpped.jpg')
+    print(segment('test_images\warpped\warpped.jpg'))

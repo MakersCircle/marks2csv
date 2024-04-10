@@ -14,7 +14,6 @@ def extract_table(img_path):
 def segment(image):
     table_contents = extract_table(image).content
     img = cv2.imread(image)
-    cp_table = img
     my_dict = {}
     cell_list = []
 

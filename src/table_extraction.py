@@ -12,6 +12,12 @@ def extract_table(img_path):
 
 
 def segment(image):
+    """
+
+    :param: Warped image.
+    :return: Dictionary containing images of each cell.
+    """
+
     table_contents = extract_table(image).content
     img = cv2.imread(image)
     my_dict = {}

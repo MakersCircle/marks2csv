@@ -3,7 +3,7 @@ import table_extraction
 import numpy as np
 from tensorflow.keras import models as tf
 import cv2
-type_model = tf.load_model('../model/Type_model.keras')
+type_model = tf.load_model('../model/type_model.keras')
 digit_model = tf.load_model('../model/digit_model.keras')
 half_model = tf.load_model('../model/half_model.keras')
 
@@ -60,5 +60,5 @@ def recognise(cells: dict[int, list[np.ndarray]]) -> dict[int, list[list]]:
 
 
 if __name__ == '__main__':
-    a = table_extraction.segment('../test_images/warpped/warpped.jpg')
+    a = table_extraction.segment('../test_images/warpped/warpped1.jpg')
     print(recognise(a))

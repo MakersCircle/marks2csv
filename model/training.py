@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 
+
 def type_classifier_train():
     train_data_gen = ImageDataGenerator(rescale=1. / 255)
     test_data_gen = ImageDataGenerator(rescale=1. / 255)
@@ -13,7 +14,7 @@ def type_classifier_train():
         color_mode='grayscale',
         batch_size=32,
         class_mode='sparse',
-        classes=['Single Digit','Halves','None']
+        classes=['Single Digit', 'Halves', 'None']
     )
 
     test_generator = test_data_gen.flow_from_directory(
@@ -22,7 +23,7 @@ def type_classifier_train():
         color_mode='grayscale',
         batch_size=32,
         class_mode='sparse',
-        classes=['Single Digit','Halves','None']
+        classes=['Single Digit', 'Halves', 'None']
     )
 
     model = Sequential([
@@ -37,10 +38,11 @@ def type_classifier_train():
     ])
 
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    hist1= model.fit(train_generator, validation_data=test_generator, epochs=15)
+    hist1 = model.fit(train_generator, validation_data=test_generator, epochs=15)
     model.save('type_model.keras')
     print("Model Saved as type_model.keras")
     return hist1
+
 
 def digit_classifier_train():
     train_data_gen = ImageDataGenerator(rescale=1. / 255)
@@ -74,10 +76,11 @@ def digit_classifier_train():
         Dense(10, activation='softmax')
     ])
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    hist2=model.fit(train_generator, validation_data=test_generator, epochs=20)
+    hist2 = model.fit(train_generator, validation_data=test_generator, epochs=20)
     model.save('digit_model.keras')
     print("Model Saved as digit_model.keras")
     return hist2
+
 
 def half_classifier_train():
     train_data_gen = ImageDataGenerator(rescale=1. / 255)
@@ -111,14 +114,16 @@ def half_classifier_train():
         Dense(10, activation='softmax')
     ])
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-    hist3=model.fit(train_generator, validation_data=test_generator, epochs=20)
+    hist3 = model.fit(train_generator, validation_data=test_generator, epochs=20)
     model.save('half_model.keras')
     print("Model Saved as half_model.keras")
     return hist3
-def graph_plot(history,labels):
+
+
+def graph_plot(history, labels):
     plt.figure(figsize=(14, 5))
     plt.subplot(1, 2, 1)
-    for hist, label in zip(histories, labels):
+    for hist, label in zip(history, labels):
         plt.plot(hist.history['accuracy'], label=f'Training Accuracy ({label})')
         plt.plot(hist.history['val_accuracy'], label=f'Validation Accuracy ({label})')
     plt.title('Training and Validation Accuracy')
@@ -127,7 +132,7 @@ def graph_plot(history,labels):
     plt.legend()
 
     plt.subplot(1, 2, 2)
-    for hist, label in zip(histories, labels):
+    for hist, label in zip(history, labels):
         plt.plot(hist.history['loss'], label=f'Training Loss ({label})')
         plt.plot(hist.history['val_loss'], label=f'Validation Loss ({label})')
     plt.title('Training and Validation Loss')
@@ -137,8 +142,9 @@ def graph_plot(history,labels):
 
     plt.show()
 
+
 if __name__ == '__main__':
-    hist1=type_classifier_train()
-    hist2=digit_classifier_train()
-    hist3=half_classifier_train()
+    hist1 = type_classifier_train()
+    hist2 = digit_classifier_train()
+    hist3 = half_classifier_train()
     graph_plot([hist1, hist2, hist3], ['Type Classifier', 'Digit Classifier', 'Half Classifier'])

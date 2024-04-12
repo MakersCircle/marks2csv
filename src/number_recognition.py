@@ -3,9 +3,11 @@ import table_extraction
 import numpy as np
 from tensorflow.keras import models as tf
 import cv2
+
 type_model = tf.load_model('../model/type_model.keras')
 digit_model = tf.load_model('../model/digit_model.keras')
 half_model = tf.load_model('../model/half_model.keras')
+
 
 def prepare_image_array(image_array):
     if len(image_array.shape) == 3:
@@ -18,6 +20,7 @@ def prepare_image_array(image_array):
     img_array = np.expand_dims(img_array, axis=0)
     img_array /= 255.0
     return img_array
+
 
 def type_predictor(new_image):
     predictions = type_model.predict(new_image)

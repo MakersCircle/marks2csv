@@ -7,7 +7,13 @@ import cv2
 import io
 
 
-def extract_table(img):
+def extract_table(img: np.ndarray):
+    """
+
+    :param: Warped image.
+    :return: Extracted table at 0th position.
+    """
+
     dpi = (200, 200)
     img_bytes = io.BytesIO()
     pil_img = PIL_img.fromarray(img)
@@ -19,7 +25,7 @@ def extract_table(img):
     return extracted_tables[0]
 
 
-def segment(img):
+def segment(img: np.ndarray) -> dict[int, list[np.ndarray]]:
     """
 
     :param: Warped image.
@@ -46,7 +52,7 @@ def segment(img):
             key_list = []
             for sublist in processed_cell_list:
                 key_list.append(sublist[i - 1])
-            my_dict[str(i)] = key_list
+            my_dict[i] = key_list
 
         return my_dict
 

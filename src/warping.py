@@ -70,8 +70,10 @@ def four_point_transform(image, pts):
 
 
 def warp(image):
-    img = image
-    big_img = cv2.imread(img)
+    # img = image
+    # big_img = cv2.imread(img)
+
+    big_img = image
 
     ratio = big_img.shape[0] / 500.0
     org = big_img.copy()
@@ -107,3 +109,11 @@ def warp(image):
     # T = threshold_local(warped, 11, offset=10, method="gaussian")
     # warped = (warped > T).astype("uint8") * 255
     # cv2.imwrite('scanned.jpg', warped)  # This line is used to save the scanned image as jpg file.
+
+
+if __name__ == '__main__':
+    file_number = "1"
+    src_path = f"../test_images/original/original_img_{file_number}.jpg"
+    warped_image = warp(cv2.imread(src_path))
+    dest_path = f"../test_images/warpped/warped_img_{file_number}.jpg"
+    cv2.imwrite('',warped_image)

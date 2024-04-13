@@ -1,7 +1,8 @@
 # this module is used to identify the numbers written in each cell using the model generated
 import table_extraction
 import numpy as np
-from tensorflow.keras import models as tf
+# from tensorflow.keras import models as tf
+from keras import models as tf
 import cv2
 
 type_model = tf.load_model('../model/type_model.keras')
@@ -63,5 +64,6 @@ def recognise(cells: dict[int, list[np.ndarray]]) -> dict[int, list[list]]:
 
 
 if __name__ == '__main__':
-    a = table_extraction.segment('../test_images/warpped/warpped1.jpg')
+    img = cv2.imread('../test_images/warpped/scanned1.jpg')
+    a = table_extraction.segment(img)
     print(recognise(a))

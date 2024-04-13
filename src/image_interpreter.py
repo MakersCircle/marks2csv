@@ -1,6 +1,6 @@
-import warping
-import table_extraction
-import number_recognition
+from . import warping
+from . import table_extraction
+from . import number_recognition
 
 import pandas as pd
 from IPython.display import display

@@ -1,10 +1,10 @@
-from src import image_interpreter
-from src import image_reader
+from src import ImageInterpreter
+from src import read
 
 
 def main():
-    captured_image = image_reader.read()
-    image_analyser = image_interpreter.ImageInterpreter(captured_image)
+    captured_image = read()
+    image_analyser = ImageInterpreter(captured_image)
     marks = image_analyser.extract()
     print(marks)
 

@@ -1,5 +1,5 @@
-from src import ImageInterpreter
-from src import read
+from src.image_interpreter import ImageInterpreter
+from src.image_reader import read
 
 
 def main():

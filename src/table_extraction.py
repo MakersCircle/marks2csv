@@ -3,11 +3,15 @@
 from img2table.document import Image
 import numpy as np
 import cv2
+import io
 
 
-def extract_table(img_path):
-    img = Image(src=img_path)
-    extracted_tables = img.extract_tables()
+def extract_table(img):
+    img_bytes = io.BytesIO()
+    img.save(img_bytes, format='JPEG')
+    img_bytes.seek(0)
+    doc = Image(img_bytes)
+    extracted_tables = doc.extract_tables()
     return extracted_tables[0]
 
 
@@ -48,4 +52,4 @@ def segment(image):
 
 
 if __name__ == '__main__':
-    print(segment('../test_images\warpped\warpped1.jpg'))
+    segment()

@@ -1,5 +1,5 @@
 # this module is used to identify the numbers written in each cell using the model generated
-import table_extraction
+from . import table_extraction
 import numpy as np
 # from tensorflow.keras import models as tf
 from keras import models as tf

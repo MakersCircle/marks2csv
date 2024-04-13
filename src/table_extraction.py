@@ -1,25 +1,32 @@
 # This module will contain the code to segment each cell from the warped image.
 
 from img2table.document import Image
+from PIL import Image as PIL_img
 import numpy as np
 import cv2
+import io
 
 
-def extract_table(img_path):
-    img = Image(src=img_path)
-    extracted_tables = img.extract_tables()
+def extract_table(img):
+    dpi = (200, 200)
+    img_bytes = io.BytesIO()
+    pil_img = PIL_img.fromarray(img)
+    pil_img.info["dpi"] = dpi
+    pil_img.save(img_bytes, format='JPEG')
+    img_bytes.seek(0)
+    doc = Image(img_bytes)
+    extracted_tables = doc.extract_tables()
     return extracted_tables[0]
 
 
-def segment(image):
+def segment(img):
     """
 
     :param: Warped image.
     :return: Dictionary containing images of each cell.
     """
 
-    table_contents = extract_table(image).content
-    img = cv2.imread(image)
+    table_contents = extract_table(img).content
     my_dict = {}
     cell_list = []
 
@@ -48,4 +55,5 @@ def segment(image):
 
 
 if __name__ == '__main__':
-    print(segment('../test_images/warpped/warpped1.jpg'))
+    image = cv2.imread('../test_images/warpped/warpped1.jpg')
+    print(segment(image))

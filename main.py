@@ -6,8 +6,8 @@ def main():
     path = 'test_images/original/original_img_1.jpg'
     captured_image = read(path)
     image_analyser = ImageInterpreter(captured_image)
-    marks = image_analyser.extract()
-    print(marks)
+    image_analyser.extract()
+    print(image_analyser.marks)
 
 
 if __name__ == "__main__":

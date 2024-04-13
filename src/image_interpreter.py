@@ -35,6 +35,7 @@ class ImageInterpreter:
         warped_image = warping.warp(self.image)
         cells = table_extraction.segment(warped_image)
         self.results = number_recognition.recognise(cells)
+        self.format_result()
 
     def __str__(self):
         """

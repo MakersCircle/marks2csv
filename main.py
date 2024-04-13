@@ -1,11 +1,11 @@
-from src import image_interpreter
-from src import image_reader
+from src.image_interpreter import ImageInterpreter
+from src.image_reader import read
 
 
 def main():
-    path = ""
-    captured_image = image_reader.read(path)
-    image_analyser = image_interpreter.ImageInterpreter(captured_image)
+    path = 'test_images/original/original_img_1.jpg'
+    captured_image = read(path)
+    image_analyser = ImageInterpreter(captured_image)
     image_analyser.extract()
     print(image_analyser)
 

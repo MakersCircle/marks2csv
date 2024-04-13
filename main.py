@@ -7,7 +7,7 @@ def main():
     captured_image = read(path)
     image_analyser = ImageInterpreter(captured_image)
     image_analyser.extract()
-    print(image_analyser.marks)
+    print(image_analyser)
 
 
 if __name__ == "__main__":

@@ -4,7 +4,6 @@ from . import number_recognition
 
 import numpy as np
 import pandas as pd
-from IPython.display import display
 
 
 class ImageInterpreter:
@@ -20,8 +19,11 @@ class ImageInterpreter:
             for mark_str, _ in values:
                 try:
                     mark = float(mark_str)
+                    if mark.is_integer():
+                        mark = int(mark)
                 except ValueError:
-                    mark = 0.0
+                    mark = 0
+                print(mark)
                 self.marks[key].append(mark)
 
     def extract(self) -> None:
@@ -41,7 +43,7 @@ class ImageInterpreter:
         """
         Display the mark of a single answer sheet
         """
-        if self.marks is None:
-            print("No Marks Detected.")
+        if not self.marks:
+            return "No Marks Detected."
         else:
-            display(pd.DataFrame(self.marks))
+            return pd.DataFrame(self.marks).to_string()

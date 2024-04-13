@@ -1,12 +1,26 @@
-# this module is used to identify the numbers written in each cell using the model generated
-from . import table_extraction
+from src import table_extraction
+
+import os
+import cv2
 import numpy as np
 from tensorflow.keras import models as tf
-import cv2
 
-type_model = tf.load_model('../model/type_model.keras')
-digit_model = tf.load_model('../model/digit_model.keras')
-half_model = tf.load_model('../model/half_model.keras')
+
+# Get the absolute path to the current directory
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Construct the absolute path to the model directory
+model_dir = os.path.join(current_dir, '..', 'model')
+
+# Load the models using the absolute paths
+type_model_path = os.path.join(model_dir, 'type_model.keras')
+digit_model_path = os.path.join(model_dir, 'digit_model.keras')
+half_model_path = os.path.join(model_dir, 'half_model.keras')
+
+
+type_model = tf.load_model(type_model_path)
+digit_model = tf.load_model(digit_model_path)
+half_model = tf.load_model(half_model_path)
 
 
 def prepare_image_array(image_array):
@@ -63,5 +77,6 @@ def recognise(cells: dict[int, list[np.ndarray]]) -> dict[int, list[list]]:
 
 
 if __name__ == '__main__':
-    a = table_extraction.segment('../test_images/warpped/warpped1.jpg')
-    print(recognise(a))
+    image = cv2.imread('../test_images/warpped/scanned1.jpg')
+    cells = table_extraction.segment(image)
+    print(recognise(cells))

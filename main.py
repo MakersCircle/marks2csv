@@ -1,14 +1,13 @@
-from src import image_interpreter
-from src import image_reader
+from src import ImageInterpreter
+from src import read
 
 
 def main():
     path = 'test_images/original/original_img_1.jpg'
-    captured_image = image_reader.read(path)
-    print("image loaded")
-    image_analyser = image_interpreter.ImageInterpreter(captured_image)
-    image_analyser.extract()
-    print(image_analyser)
+    captured_image = read(path)
+    image_analyser = ImageInterpreter(captured_image)
+    marks = image_analyser.extract()
+    print(marks)
 
 
 if __name__ == "__main__":

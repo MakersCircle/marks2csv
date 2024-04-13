@@ -23,7 +23,6 @@ class ImageInterpreter:
                         mark = int(mark)
                 except ValueError:
                     mark = 0
-                print(mark)
                 self.marks[key].append(mark)
 
     def extract(self) -> None:

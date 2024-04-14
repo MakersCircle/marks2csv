@@ -10,8 +10,10 @@ if uploaded_file is not None:
     image_array = np.array(image_data)
     image_analyser = ImageInterpreter(image_array)
     image_analyser.extract()
-    a=image_analyser.marks
+    marks_dict=image_analyser.marks
+    total_marks = sum(value[0] for value in marks_dict.values())
     st.image(image_data, caption='Uploaded Image')
     st.write("Processed Results:")
-    df = pd.DataFrame.from_dict(a, orient='index', columns=['a', 'b', 'c'])
+    df = pd.DataFrame.from_dict(marks_dict, orient='index', columns=['a', 'b', 'c'])
     st.write(df.T)
+    st.write("TOTAL = ",total_marks)

@@ -15,5 +15,3 @@ if uploaded_file is not None:
     st.write("Processed Results:")
     df = pd.DataFrame.from_dict(a, orient='index', columns=['a', 'b', 'c'])
     st.write(df.T)
-
-

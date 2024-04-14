@@ -1,3 +1,4 @@
+import pandas as pd
 import streamlit as st
 from PIL import Image
 import numpy as np
@@ -9,6 +10,8 @@ if uploaded_file is not None:
     image_array = np.array(image_data)
     image_analyser = ImageInterpreter(image_array)
     image_analyser.extract()
+    a=image_analyser.marks
     st.image(image_data, caption='Uploaded Image')
     st.write("Processed Results:")
-    st.write(image_analyser)
+    df = pd.DataFrame.from_dict(a, orient='index', columns=['a', 'b', 'c'])
+    st.write(df.T)

@@ -3,6 +3,7 @@
 import numpy as np
 import cv2
 import imutils
+#from skimage.filters import threshold_local  #THIS PACKAGE IS NEEDED ONLY IF A SCANNED OUTPUT IS TO BE PRODUCED
 
 def order_points(pts):
     # initialzie a list of coordinates that will be ordered
@@ -68,38 +69,47 @@ def four_point_transform(image, pts):
 
 
 def warp(image):
-    # img = image
+    # img = image                               # for manual implementation
     # big_img = cv2.imread(img)
     doc = None
     big_img = image
 
-    ratio = big_img.shape[0] / 500.0
+    # Resize the image for faster processing while maintaining aspect ratio
+    ratio = big_img.shape[0] / 500.0    # Resize based on height
     org = big_img.copy()
     img = imutils.resize(big_img, height=500)
 
+    # Convert to grayscale for edge detection
     gray_img = cv2.cvtColor(img.copy(), cv2.COLOR_BGR2GRAY)
+    # Apply Gaussian blur for noise reduction and edge smoothing
     blur_img = cv2.GaussianBlur(gray_img, (5, 5), 0)
+    # Use Canny edge detection to find prominent edges in the image
     edged_img = cv2.Canny(blur_img, 75, 200)
-
+    # Find contours in the edge image
     cnts, _ = cv2.findContours(edged_img.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    # Sort contours by area in descending order (largest first) and select top 5
     cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
+    # Iterate through contours to find a quadrilateral (4-sided) document shape
     for c in cnts:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+        peri = cv2.arcLength(c, True)                       # Calculate perimeter
+        approx = cv2.approxPolyDP(c, 0.02 * peri, True)     # Approximate contour with polygon
+        # Check if the approximated contour has 4 corners (a quadrilateral)
         if len(approx) == 4:
             doc = approx
             break
+    # If no suitable document contour is found, raise an error and grayscale without cropping the image  
     if doc is None:
+        print("Could not find a suitable quadrilateral document shape in the image.")
         doc = np.array([[0, 0], [image.shape[1] - 1, 0], [image.shape[1] - 1, image.shape[0] - 1], [0, image.shape[0] - 1]])
         doc = doc.reshape(4, 2)
     else:    
-        p = []
+        p = []  # List to store corner points (tuples)
         for d in doc:
-            tuple_point = tuple(d[0])
+            tuple_point = tuple(d[0])       # Convert contour points to tuples
             cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
             p.append(tuple_point)
-    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)
-    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)   # Reshape and scale corner points
+    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)        # Convert the warped image back to grayscale (assuming desired output)             
 
     return warped
 

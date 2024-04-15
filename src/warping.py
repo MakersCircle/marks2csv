@@ -110,8 +110,13 @@ def warp(image):
             p.append(tuple_point)
     warped = four_point_transform(org, doc.reshape(4, 2) * ratio)   # Reshape and scale corner points
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)        # Convert the warped image back to grayscale (assuming desired output)             
+     # Apply thresholding to obtain a binary image (black and white)
+    _, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
 
-    return warped
+     # Apply dilation with a small kernel size to thicken lines
+    kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
+    warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
+    return warped_thickened
 
     # USE WARPED IN THE NEXT STEP OF THE CODE, The output datatype is a numpy array
     # cv2.imwrite('warped.jpg', warped)         #This line is used to save the warped (not scanned) image as jpg file.

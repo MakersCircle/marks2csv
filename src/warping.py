@@ -4,7 +4,6 @@ import numpy as np
 import cv2
 import imutils
 
-
 def order_points(pts):
     # initialzie a list of coordinates that will be ordered
     # such that the first entry in the list is the top-left,
@@ -69,8 +68,10 @@ def four_point_transform(image, pts):
 
 
 def warp(image):
-    img = image
-    big_img = cv2.imread(img)
+    # img = image
+    # big_img = cv2.imread(img)
+    doc = None
+    big_img = image
 
     ratio = big_img.shape[0] / 500.0
     org = big_img.copy()
@@ -88,19 +89,31 @@ def warp(image):
         if len(approx) == 4:
             doc = approx
             break
-
-    p = []
-    for d in doc:
-        tuple_point = tuple(d[0])
-        cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
-        p.append(tuple_point)
-
+    if doc is None:
+        doc = np.array([[0, 0], [image.shape[1] - 1, 0], [image.shape[1] - 1, image.shape[0] - 1], [0, image.shape[0] - 1]])
+        doc = doc.reshape(4, 2)
+    else:    
+        p = []
+        for d in doc:
+            tuple_point = tuple(d[0])
+            cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
+            p.append(tuple_point)
     warped = four_point_transform(org, doc.reshape(4, 2) * ratio)
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
+
+    return warped
     # USE WARPED IN THE NEXT STEP OF THE CODE, The output datatype is a numpy array
 
-    # cv2.imwrite('warpped.jpg', warped)         #This line is used to save the warpped (not scanned) image as jpg file.
+    # cv2.imwrite('warped.jpg', warped)         #This line is used to save the warped (not scanned) image as jpg file.
 
-    # T = threshold_local(warped, 11, offset = 10, method = "gaussian")
+    # T = threshold_local(warped, 11, offset=10, method="gaussian")
     # warped = (warped > T).astype("uint8") * 255
-    # cv2.imwrite('scanned.jpg', warped)         #This line is used to save the scanned image as jpg file.
+    # cv2.imwrite('scanned.jpg', warped)  # This line is used to save the scanned image as jpg file.
+
+
+if _name_ == '_main_':
+    file_number = "1"
+    src_path = f"../test_images/original/original_img_{file_number}.jpg"
+    warped_image = warp(cv2.imread(src_path))
+    dest_path = f"../test_images/warpped/warped_img_{file_number}.jpg"
+    cv2.imwrite('',warped_image)

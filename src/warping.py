@@ -91,32 +91,31 @@ def warp(image):
     cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
     # Iterate through contours to find a quadrilateral (4-sided) document shape
     for c in cnts:
-        peri = cv2.arcLength(c, True)                       # Calculate perimeter
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)     # Approximate contour with polygon
+        # Calculate perimeter
+        peri = cv2.arcLength(c, True)   
+        # Approximate contour with polygon                    
+        approx = cv2.approxPolyDP(c, 0.02 * peri, True)     
         # Check if the approximated contour has 4 corners (a quadrilateral)
         if len(approx) == 4:
             doc = approx
             break
-    # If no suitable document contour is found, raise an error and grayscale without cropping the image  
+    # If no suitable document contour is found, print an error and continue without cropping or warping the image  
     if doc is None:
         print("Could not find a suitable quadrilateral document shape in the image.")
         doc = np.array([[0, 0], [image.shape[1] - 1, 0], [image.shape[1] - 1, image.shape[0] - 1], [0, image.shape[0] - 1]])
         doc = doc.reshape(4, 2)
-    else:    
-        p = []  # List to store corner points (tuples)
+    else:  
+        # List to store corner points (tuples)  
+        p = []  
         for d in doc:
-            tuple_point = tuple(d[0])       # Convert contour points to tuples
+            # Convert contour points to tuples
+            tuple_point = tuple(d[0])       
             cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
             p.append(tuple_point)
-    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)   # Reshape and scale corner points
-    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)        # Convert the warped image back to grayscale (assuming desired output)             
-     # Apply thresholding to obtain a binary image (black and white)
-    _, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
-
-     # Apply dilation with a small kernel size to thicken lines
-    kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
-    warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
-    return warped_thickened
+    # Reshape and scale corner points
+    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)   
+    # Convert the warped image back to grayscale (assuming desired output)
+    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)                    
 
     # USE WARPED IN THE NEXT STEP OF THE CODE, The output datatype is a numpy array
     # cv2.imwrite('warped.jpg', warped)         #This line is used to save the warped (not scanned) image as jpg file.
@@ -124,6 +123,13 @@ def warp(image):
     # warped = (warped > T).astype("uint8") * 255
     # cv2.imwrite('scanned.jpg', warped)  # This line is used to save the scanned image as jpg file.
 
+     # Apply thresholding to obtain a binary image (black and white)
+    _, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
+
+     # Apply dilation with a small kernel size to thicken lines
+    kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
+    warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
+    return warped_thickened
 
 if __name__ == '_main_':
     file_number = "1"

@@ -124,12 +124,12 @@ def warp(image):
     # cv2.imwrite('scanned.jpg', warped)  # This line is used to save the scanned image as jpg file.
 
      # Apply thresholding to obtain a binary image (black and white)
-    _, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
+    #_, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
 
      # Apply dilation with a small kernel size to thicken lines
-    kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
-    warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
-    return warped_thickened
+    #kernel = np.ones((0, 0), np.uint8)  # Adjust kernel size for line thickness
+    #warped_thickened = cv2.dilate(warped_binary, kernel, iterations=0)
+    return warped
 
 if __name__ == '_main_':
     file_number = "1"

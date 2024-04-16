@@ -3,8 +3,7 @@
 import numpy as np
 import cv2
 import imutils
-from skimage.filters import threshold_local
-
+#from skimage.filters import threshold_local  #THIS PACKAGE IS NEEDED ONLY IF A SCANNED OUTPUT IS TO BE PRODUCED
 
 def order_points(pts):
     # initialzie a list of coordinates that will be ordered
@@ -70,48 +69,69 @@ def four_point_transform(image, pts):
 
 
 def warp(image):
-    # img = image
+    # img = image                               # for manual implementation
     # big_img = cv2.imread(img)
-
+    doc = None
     big_img = image
 
-    ratio = big_img.shape[0] / 500.0
+    # Resize the image for faster processing while maintaining aspect ratio
+    ratio = big_img.shape[0] / 500.0    # Resize based on height
     org = big_img.copy()
     img = imutils.resize(big_img, height=500)
 
+    # Convert to grayscale for edge detection
     gray_img = cv2.cvtColor(img.copy(), cv2.COLOR_BGR2GRAY)
+    # Apply Gaussian blur for noise reduction and edge smoothing
     blur_img = cv2.GaussianBlur(gray_img, (5, 5), 0)
+    # Use Canny edge detection to find prominent edges in the image
     edged_img = cv2.Canny(blur_img, 75, 200)
-
+    # Find contours in the edge image
     cnts, _ = cv2.findContours(edged_img.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+    # Sort contours by area in descending order (largest first) and select top 5
     cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:5]
+    # Iterate through contours to find a quadrilateral (4-sided) document shape
     for c in cnts:
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
+        # Calculate perimeter
+        peri = cv2.arcLength(c, True)   
+        # Approximate contour with polygon                    
+        approx = cv2.approxPolyDP(c, 0.02 * peri, True)     
+        # Check if the approximated contour has 4 corners (a quadrilateral)
         if len(approx) == 4:
             doc = approx
             break
+    # If no suitable document contour is found, print an error and continue without cropping or warping the image  
+    if doc is None:
+        print("Could not find a suitable quadrilateral document shape in the image.")
+        doc = np.array([[0, 0], [image.shape[1] - 1, 0], [image.shape[1] - 1, image.shape[0] - 1], [0, image.shape[0] - 1]])
+        doc = doc.reshape(4, 2)
+    else:  
+        # List to store corner points (tuples)  
+        p = []  
+        for d in doc:
+            # Convert contour points to tuples
+            tuple_point = tuple(d[0])       
+            cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
+            p.append(tuple_point)
+    # Reshape and scale corner points
+    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)   
+    # Convert the warped image back to grayscale (assuming desired output)
+    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)                    
 
-    p = []
-    for d in doc:
-        tuple_point = tuple(d[0])
-        cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
-        p.append(tuple_point)
-
-    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)
-    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
-
-    return warped
     # USE WARPED IN THE NEXT STEP OF THE CODE, The output datatype is a numpy array
-
     # cv2.imwrite('warped.jpg', warped)         #This line is used to save the warped (not scanned) image as jpg file.
-
     # T = threshold_local(warped, 11, offset=10, method="gaussian")
     # warped = (warped > T).astype("uint8") * 255
     # cv2.imwrite('scanned.jpg', warped)  # This line is used to save the scanned image as jpg file.
 
+     # Apply thresholding to obtain a binary image (black and white)
+    _, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
 
-if __name__ == '__main__':
+     # Apply dilation with a small kernel size to thicken lines
+    kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
+    warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
+    return warped_thickened
+
+if __name__ == '_main_':
     file_number = "1"
     src_path = f"../test_images/original/original_img_{file_number}.jpg"
     warped_image = warp(cv2.imread(src_path))

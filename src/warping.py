@@ -113,12 +113,12 @@ def warp(image):
     # Convert the warped image back to grayscale (assuming desired output)
     warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)                    
 
-    # cv2.imwrite('warped.jpg', warped)
     # Apply thresholding to obtain a binary image (black and white)
     #_, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
     # Apply dilation with a small kernel size to thicken lines
     #kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
     #warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
+    # cv2.imwrite('warped.jpg', warped)
     return warped
 
 if __name__ == '_main_':

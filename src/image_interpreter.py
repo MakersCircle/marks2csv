@@ -17,14 +17,15 @@ class ImageInterpreter:
             self.marks[key] = []
             for mark_str, confidence in values:
                 try:
-                    mark = round(float(mark_str),1)
+                    mark = round(float(mark_str), 1)
                 except ValueError:
                     mark = 0.0
                 try:
-                    confidence = round(float(confidence),1)
+                    confidence = round(float(confidence), 2)
                 except ValueError:
                     confidence = 0.0
                 self.marks[key].append((mark, confidence))
+
     def extract(self) -> None:
         """
         A pipeline for the processes:

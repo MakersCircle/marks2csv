@@ -37,7 +37,7 @@ if uploaded_file is not None:
                 if not entry.empty:
                     mark = entry.iloc[0]['Mark']
                     conf = entry.iloc[0]['Confidence']
-                    color = 'green' if conf > 0.8 else 'yellow' if conf > 0.5 else 'red'
+                    color = 'green' if conf > 0.95 else 'yellow' if conf > 0.5 else 'red'
                     html += f'<td style="border: 1px solid black; background-color: {color};"><input type="text" value="{mark}" style="width: 100%; background: transparent; border: none; text-align: center;" onclick="this.select();"></td>'
                 else:
                     html += '<td style="border: 1px solid black;"></td>'
@@ -50,5 +50,6 @@ if uploaded_file is not None:
     components.html(html_table, height=130)
     total_marks = df['Mark'].apply(pd.to_numeric, errors='coerce').sum()
     st.write("TOTAL = ", total_marks)
+    print(image_analyser)
 else:
     st.write("Please upload an image to proceed.")

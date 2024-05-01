@@ -24,6 +24,7 @@ if uploaded_file is not None:
                 'Confidence': confidence
             })
     df = pd.DataFrame(df_data)
+    
     def generate_html_table(df):
         questions = df['Question No'].unique()
         subparts = sorted(df['Subpart'].unique())

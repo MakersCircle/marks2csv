@@ -25,13 +25,22 @@ class ImageInterpreter:
                 self.marks[key].append((mark, confidence))
 
     def extract(self) -> None:
+        """
+        A pipeline for the processes:
+        i) Warp the captured image.
+        ii) Extract each individual cells from the table containing the handwritten marks.
+        iii) Detect handwritten digit of each cell.
+        """
+
         warped_image = warping.warp(self.image)
         cells = table_extraction.segment(warped_image)
         self.results = number_recognition.recognise(cells)
         self.format_result()
 
     def __str__(self):
-        # String representation of the marks in a DataFrame format
+        """
+        Display the mark of a single answer sheet
+        """
         if not self.marks:
             return "No Marks Detected."
         else:

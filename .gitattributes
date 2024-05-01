@@ -1,0 +1,6 @@
+src/number_recognition.py merge=ours
+model/digit_model.keras merge=ours
+model/half_model.keras merge=ours
+model/training.py merge=ours
+model/README.md merge=ours
+model/type_model.keras merge=ours

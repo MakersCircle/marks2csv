@@ -5,3 +5,7 @@ opencv-python~=4.9.0.80
 img2table==1.2.10
 matplotlib~=3.8.2
 tensorflow~=2.10.0
+pillow==10.3.0
+imutils==0.5.4
+scikit-image==0.23.1
+streamlit==1.33.0

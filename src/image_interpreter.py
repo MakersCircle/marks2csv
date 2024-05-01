@@ -8,23 +8,23 @@ import pandas as pd
 
 class ImageInterpreter:
     def __init__(self, image):
-        self.marks: dict[int, list[float]] = {}
-        self.image: np.ndarray = image
+        self.marks: dict[int, list[tuple[float, float]]] = {}
+        self.image = image
         self.results = {}
 
     def format_result(self) -> None:
-
         for key, values in self.results.items():
             self.marks[key] = []
-            for mark_str, _ in values:
+            for mark_str, confidence in values:
                 try:
-                    mark = float(mark_str)
-                    if mark.is_integer():
-                        mark = int(mark)
+                    mark = round(float(mark_str),1)
                 except ValueError:
-                    mark = 0
-                self.marks[key].append(mark)
-
+                    mark = 0.0
+                try:
+                    confidence = round(float(confidence),1)
+                except ValueError:
+                    confidence = 0.0
+                self.marks[key].append((mark, confidence))
     def extract(self) -> None:
         """
         A pipeline for the processes:

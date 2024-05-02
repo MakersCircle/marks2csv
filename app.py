@@ -14,6 +14,31 @@ if uploaded_file is not None:
     image_analyser = ImageInterpreter(image_array)
     image_analyser.extract()
     marks_dict = image_analyser.marks
+    marks = {}
+    confidence = {}
+    for key, values in marks_dict.items():
+        marks[key] = [val[0] for val in values]
+        confidence[key] = [val[1] for val in values]
+    def style_based_on_confidence(mark_df, confidence_df, threshold=0.90):
+        # Create a function to apply style based on confidence
+        def apply_style(v, c):
+            if v == 0:
+                return 'color: #427AA1'
+            elif c > threshold:
+                return 'color: #70F8BA'
+            else:
+                return 'color: #EB5160'
+
+        # Create a new styled object
+        styled = mark_df.style.apply(lambda x: [apply_style(v, c) for v, c in zip(x, confidence_df[x.name])], axis=0)
+        return styled
+
+
+    styled_result = style_based_on_confidence(pd.DataFrame(marks), pd.DataFrame(confidence))
+
+    editable = not st.toggle("Edit")
+
+    a = st.data_editor(styled_result, disabled=editable)
     df_data = []
     for key, values in marks_dict.items():
         for i, (mark, confidence) in enumerate(values, 1):
@@ -24,31 +49,10 @@ if uploaded_file is not None:
                 'Confidence': confidence
             })
     df = pd.DataFrame(df_data)
-    
-    def generate_html_table(df):
-        questions = df['Question No'].unique()
-        subparts = sorted(df['Subpart'].unique())
-        html = '<table style="border-collapse: collapse; width: 100%;">'
-        html += '<tr><th></th>' + ''.join(f'<th style="border: 1px solid black; padding: 5px; text-align: center;">{q}</th>' for q in questions) + '</tr>'
-        for subpart in subparts:
-            html += f'<tr><td style="border: 1px solid black; padding: 5px;">{subpart.upper()}</td>'
-            for question in questions:
-                entry = df[(df['Question No'] == question) & (df['Subpart'] == subpart)]
-                if not entry.empty:
-                    mark = entry.iloc[0]['Mark']
-                    conf = entry.iloc[0]['Confidence']
-                    color = 'green' if conf > 0.8 else 'yellow' if conf > 0.5 else 'red'
-                    html += f'<td style="border: 1px solid black; background-color: {color};"><input type="text" value="{mark}" style="width: 100%; background: transparent; border: none; text-align: center;" onclick="this.select();"></td>'
-                else:
-                    html += '<td style="border: 1px solid black;"></td>'
-            html += '</tr>'
-        html += '</table>'
-        return html
-    html_table = generate_html_table(df)
     st.image(image_data, caption='UPLOADED IMAGE:')
     st.write("PROCESSED MARKS:")
-    components.html(html_table, height=130)
     total_marks = df['Mark'].apply(pd.to_numeric, errors='coerce').sum()
     st.write("TOTAL = ", total_marks)
+    st.dataframe(df)
 else:
     st.write("Please upload an image to proceed.")

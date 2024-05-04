@@ -19,6 +19,8 @@ if uploaded_file is not None:
     for key, values in marks_dict.items():
         marks[key] = [val[0] for val in values]
         confidence[key] = [val[1] for val in values]
+
+
     def style_based_on_confidence(mark_df, confidence_df, threshold=0.90):
         # Create a function to apply style based on confidence
         def apply_style(v, c):
@@ -40,6 +42,7 @@ if uploaded_file is not None:
 
     a = st.data_editor(styled_result, disabled=editable)
     df_data = []
+
     for key, values in marks_dict.items():
         for i, (mark, confidence) in enumerate(values, 1):
             df_data.append({

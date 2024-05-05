@@ -6,24 +6,16 @@ import pandas as pd
 
 class ImageInterpreter:
     def __init__(self, image):
-        self.marks: dict[int, list[tuple[float, float]]] = {}
         self.image = image
         self.warped_image = None
         self.results: dict[int, list[tuple[str, float]]] = {}
+        self.marks: dict[int, list[str]] = {}
+        self.confidence: dict[int, list[float]] = {}
 
     def format_result(self) -> None:
         for key, values in self.results.items():
-            self.marks[key] = []
-            for mark_str, confidence in values:
-                try:
-                    mark = round(float(mark_str), 1)
-                except ValueError:
-                    mark = 0.0
-                try:
-                    confidence = round(float(confidence), 2)
-                except ValueError:
-                    confidence = 0.0
-                self.marks[key].append((mark, confidence))
+            self.marks[key] = [value[0] if value[0] != 'None' else '0' for value in values]
+            self.confidence[key] = [value[1] for value in values]
 
     def extract(self) -> None:
         """

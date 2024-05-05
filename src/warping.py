@@ -3,8 +3,6 @@
 import numpy as np
 import cv2
 import imutils
-#from skimage.filters import threshold_local  #THIS PACKAGE IS NEEDED ONLY IF A SCANNED OUTPUT IS TO BE PRODUCED
-
 def order_points(pts):
     # initialzie a list of coordinates that will be ordered
     # such that the first entry in the list is the top-left,

@@ -28,7 +28,7 @@ if uploaded_file is not None:
     def generate_html_table(df):
         questions = df['Question No'].unique()
         subparts = sorted(df['Subpart'].unique())
-        html = '<table style="border-collapse: collapse; width: 100%;">'
+        html = '<table style="border-collapse: collapse; width: 100%;background-color: white;">'
         html += '<tr><th></th>' + ''.join(f'<th style="border: 1px solid black; padding: 5px; text-align: center;">{q}</th>' for q in questions) + '</tr>'
         for subpart in subparts:
             html += f'<tr><td style="border: 1px solid black; padding: 5px;">{subpart.upper()}</td>'

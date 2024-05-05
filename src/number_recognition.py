@@ -60,7 +60,7 @@ def half_predictor(new_image):
     return predicted_class, confidence
 
 
-def recognise(cells: dict[int, list[np.ndarray]]) -> dict[int, list[list]]:
+def recognise(cells: dict[int, list[np.ndarray]]) -> dict[int, list[tuple[str, float]]]:
     results = {}
     for question_num, sub_questions in cells.items():
         sub_question_results = []
@@ -71,7 +71,7 @@ def recognise(cells: dict[int, list[np.ndarray]]) -> dict[int, list[list]]:
                 prediction, confidence = digit_predictor(prepared_image)
             elif prediction == 'Halves':
                 prediction, confidence = half_predictor(prepared_image)
-            sub_question_results.append([prediction, float(confidence)])
+            sub_question_results.append((prediction, round(float(confidence), 3)))
         results[question_num] = sub_question_results
     return results
 

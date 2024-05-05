@@ -8,7 +8,8 @@ class ImageInterpreter:
     def __init__(self, image):
         self.marks: dict[int, list[tuple[float, float]]] = {}
         self.image = image
-        self.results = {}
+        self.warped_image = None
+        self.results: dict[int, list[tuple[str, float]]] = {}
 
     def format_result(self) -> None:
         for key, values in self.results.items():
@@ -32,8 +33,8 @@ class ImageInterpreter:
         iii) Detect handwritten digit of each cell.
         """
 
-        warped_image = warping.warp(self.image)
-        cells = table_extraction.segment(warped_image)
+        self.warped_image = warping.warp(self.image)
+        cells = table_extraction.segment(self.warped_image)
         self.results = number_recognition.recognise(cells)
         self.format_result()
 

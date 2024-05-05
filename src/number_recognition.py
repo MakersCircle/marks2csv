@@ -3,7 +3,7 @@ from src import table_extraction
 import os
 import cv2
 import numpy as np
-from tensorflow.keras import models as tf
+import tensorflow as tf
 
 
 # Get the absolute path to the current directory
@@ -17,10 +17,9 @@ type_model_path = os.path.join(model_dir, 'type_model.keras')
 digit_model_path = os.path.join(model_dir, 'digit_model.keras')
 half_model_path = os.path.join(model_dir, 'half_model.keras')
 
-
-type_model = tf.load_model(type_model_path)
-digit_model = tf.load_model(digit_model_path)
-half_model = tf.load_model(half_model_path)
+type_model = tf.keras.models.load_model(type_model_path)
+digit_model = tf.keras.models.load_model(digit_model_path)
+half_model = tf.keras.models.load_model(half_model_path)
 
 
 def prepare_image_array(image_array):

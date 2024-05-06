@@ -138,7 +138,6 @@ def warp(image):
         
     return warped
 
-
 if __name__ == '_main_':
     file_number = "1"
     src_path = f"../test_images/original/original_img_{file_number}.jpg"

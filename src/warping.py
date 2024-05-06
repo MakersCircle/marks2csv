@@ -135,8 +135,9 @@ def warp(image):
         # Taller image, adjust height based on target ratio and width
         new_height = int(width / target_ratio)
         warped = cv2.resize(warped, (width, new_height))
-        
+
     return warped
+
 
 if __name__ == '_main_':
     file_number = "1"

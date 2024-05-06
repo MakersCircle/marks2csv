@@ -75,6 +75,19 @@ sheet to the system and Marks2CSV will do the rest.
   </a>
 </p>
 
+## Future Directions
+
+As Marks2CSV continues to evolve, we aim to expand its capabilities and accessibility. Key developments in the pipeline include:
+
+- **Desktop Application**: Package the system into a standalone desktop application, complete with an easy-to-install setup. This will provide educators with a robust, user-friendly interface directly on their PCs, streamlining the process further.
+
+- **Integrated Webcam Stand**: Develop a customized webcam stand setup that can be bundled with the desktop application. This stand will help educators consistently capture high-quality images of answer sheets without the need for manual adjustments, ensuring optimal results.
+
+- **Mobile Application**: Extend functionality to a mobile platform, allowing educators to capture, process, and convert marks into CSV files directly from their smartphones. This mobile app will offer convenience and portability, making it possible to handle grading tasks on the go.
+
+These enhancements are aimed at making Marks2CSV not just a tool but a comprehensive solution for educational assessment management.
+
+
 
 ## Acknowledgements
 This project is a continuation of the work initiated by our seniors. We build upon the foundation laid in the previous version of the Marks2CSV tool.

@@ -3,10 +3,10 @@
 import numpy as np
 import cv2
 import imutils
-#from skimage.filters import threshold_local  #THIS PACKAGE IS NEEDED ONLY IF A SCANNED OUTPUT IS TO BE PRODUCED
+
 
 def order_points(pts):
-    # initialzie a list of coordinates that will be ordered
+    # initialize a list of coordinates that will be ordered
     # such that the first entry in the list is the top-left,
     # the second entry is the top-right, the third is the
     # bottom-right, and the fourth is the bottom-left
@@ -37,7 +37,7 @@ def four_point_transform(image, pts):
 
     # compute the width of the new image, which will be the
     # maximum distance between bottom-right and bottom-left
-    # x-coordiates or the top-right and top-left x-coordinates
+    # x-coordinates or the top-right and top-left x-coordinates
     widthA = np.sqrt(((br[0] - bl[0]) ** 2) + ((br[1] - bl[1]) ** 2))
     widthB = np.sqrt(((tr[0] - tl[0]) ** 2) + ((tr[1] - tl[1]) ** 2))
     maxWidth = max(int(widthA), int(widthB))
@@ -75,7 +75,7 @@ def warp(image):
     big_img = image
 
     # Resize the image for faster processing while maintaining aspect ratio
-    ratio = big_img.shape[0] / 500.0    # Resize based on height
+    ratio = big_img.shape[0] / 500.0  # Resize based on height
     org = big_img.copy()
     img = imutils.resize(big_img, height=500)
 
@@ -92,9 +92,9 @@ def warp(image):
     # Iterate through contours to find a quadrilateral (4-sided) document shape
     for c in cnts:
         # Calculate perimeter
-        peri = cv2.arcLength(c, True)   
+        peri = cv2.arcLength(c, True)
         # Approximate contour with polygon                    
-        approx = cv2.approxPolyDP(c, 0.02 * peri, True)     
+        approx = cv2.approxPolyDP(c, 0.02 * peri, True)
         # Check if the approximated contour has 4 corners (a quadrilateral)
         if len(approx) == 4:
             doc = approx
@@ -102,38 +102,45 @@ def warp(image):
     # If no suitable document contour is found, print an error and continue without cropping or warping the image  
     if doc is None:
         print("Could not find a suitable quadrilateral document shape in the image.")
-        doc = np.array([[0, 0], [image.shape[1] - 1, 0], [image.shape[1] - 1, image.shape[0] - 1], [0, image.shape[0] - 1]])
+        doc = np.array(
+            [[0, 0], [image.shape[1] - 1, 0], [image.shape[1] - 1, image.shape[0] - 1], [0, image.shape[0] - 1]])
         doc = doc.reshape(4, 2)
-    else:  
+    else:
         # List to store corner points (tuples)  
-        p = []  
+        p = []
         for d in doc:
             # Convert contour points to tuples
-            tuple_point = tuple(d[0])       
+            tuple_point = tuple(d[0])
             cv2.circle(img, tuple_point, 3, (0, 0, 255), 4)
             p.append(tuple_point)
     # Reshape and scale corner points
-    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)   
+    warped = four_point_transform(org, doc.reshape(4, 2) * ratio)
     # Convert the warped image back to grayscale (assuming desired output)
-    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)                    
+    warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)
 
-    # USE WARPED IN THE NEXT STEP OF THE CODE, The output datatype is a numpy array
-    # cv2.imwrite('warped.jpg', warped)         #This line is used to save the warped (not scanned) image as jpg file.
-    # T = threshold_local(warped, 11, offset=10, method="gaussian")
-    # warped = (warped > T).astype("uint8") * 255
-    # cv2.imwrite('scanned.jpg', warped)  # This line is used to save the scanned image as jpg file.
+    # Calculate the desired aspect ratio
+    target_ratio = 71 / 90
 
-     # Apply thresholding to obtain a binary image (black and white)
-    _, warped_binary = cv2.threshold(warped, 127, 255, cv2.THRESH_BINARY)
+    # Get the dimensions of the warped image
+    height, width = warped.shape[:2]
 
-     # Apply dilation with a small kernel size to thicken lines
-    kernel = np.ones((1, 1), np.uint8)  # Adjust kernel size for line thickness
-    warped_thickened = cv2.dilate(warped_binary, kernel, iterations=1)
-    return warped_thickened
+    # Check if the current aspect ratio is wider or taller
+    current_ratio = width / height
+
+    if current_ratio > target_ratio:
+        # Wider image, adjust width based on target ratio and height
+        new_width = int(height * target_ratio)
+        warped = cv2.resize(warped, (new_width, height))
+    else:
+        # Taller image, adjust height based on target ratio and width
+        new_height = int(width / target_ratio)
+        warped = cv2.resize(warped, (width, new_height))
+        
+    return warped
 
 if __name__ == '_main_':
     file_number = "1"
     src_path = f"../test_images/original/original_img_{file_number}.jpg"
     warped_image = warp(cv2.imread(src_path))
     dest_path = f"../test_images/warpped/warped_img_{file_number}.jpg"
-    cv2.imwrite('',warped_image)
+    cv2.imwrite('', warped_image)

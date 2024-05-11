@@ -8,7 +8,7 @@ from PIL import Image
 import streamlit as st
 
 
-st.title('Marks2CSV')
+st.set_page_config(page_title="marks2CSV", layout="wide")
 uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
 st.write("UPLOADED FILE : ")
 if uploaded_file is not None:
@@ -62,7 +62,7 @@ if uploaded_file is not None:
 
 
     styled_marks = style_based_on_confidence(pd.DataFrame(marks), pd.DataFrame(confidence))
-    st.image(warped_image, caption="Uploaded Image")
+    st.image(warped_image, caption="Uploaded Image", width=500)
 
     editable = not st.toggle("Edit")
     a = st.data_editor(styled_marks, disabled=editable)

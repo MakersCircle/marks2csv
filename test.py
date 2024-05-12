@@ -1,35 +1,38 @@
-import streamlit as st
-import pandas as pd
+import cv2
+
+# from src.image_interpreter import ImageInterpreter
+
 import numpy as np
+import pandas as pd
+from PIL import Image
+import streamlit as st
 
-# Sample DataFrame
-mark = pd.DataFrame({
-    "1": [3,0,0],
-    "2": [2.5,0,0]})
-confidence = pd.DataFrame({
-    "1": [.95,1,1],
-    "2": [.89,1,1]})
+st.set_page_config(page_title="marks2CSV", layout="wide")
 
+if 'data' not in st.session_state:
+    st.session_state.data = None
+if 'source' not in st.session_state:
+    st.session_state.source = "Source"
 
-def style_based_on_confidence(mark_df, confidence_df, threshold=0.90):
-    # Create a function to apply style based on confidence
-    def apply_style(v, c):
-        if v == 0:
-            return 'color: #427AA1'
-        elif c > threshold:
-            return 'color: #70F8BA'
-        else:
-            return 'color: #EB5160'
-
-    # Create a new styled object
-    styled = mark_df.style.apply(lambda x: [apply_style(v, c) for v, c in zip(x, confidence_df[x.name])], axis=0)
-    return styled
+if st.session_state.data is None:
+    uploaded_file = st.file_uploader("Please upload your CSV file from Etlab", type=['csv'])
+    if uploaded_file is not None:
+        st.session_state.data = pd.read_csv(uploaded_file)
+        st.experimental_rerun()
 
 
-styled_result = style_based_on_confidence(mark, confidence)
+if st.session_state.data is not None:
+    # Display the rest of the app after the file is uploaded
+    with st.sidebar.popover("Source"):
+        st.session_state.source = st.radio("Select source for input image",
+                          ["Upload Image", "Camera"],
+                          index=None)
 
-editable = not st.toggle("Edit")
+    image_section, table_section = st.columns([1, 2])
 
-a = st.data_editor(styled_result, disabled=editable)
-print(a)
+    with image_section:
+        warped_image = cv2.imread('test_images/warpped/scanned1.jpg')
+        st.image(warped_image, caption="Uploaded Image", width=500)
 
+    with table_section:
+        st.dataframe(st.session_state.data)

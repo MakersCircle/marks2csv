@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 from PIL import Image
 import streamlit as st
+from io import StringIO
 
 # from src.image_interpreter import ImageInterpreter
 
@@ -62,10 +63,11 @@ if st.session_state.uploaded_data is None:
     uploaded_file = st.file_uploader("Please upload your CSV file from Etlab", type=['csv'])
     if uploaded_file is not None:
         st.session_state.uploaded_data = pd.read_csv(uploaded_file)
-        # st.session_state.title = add title of the uploaded_file
-        # st.session_state.data = add data after removing the title
-        # st.session_state.roll_no_list = st.session_state.data['Roll No'].to_list()
-        # st.session_state.roll_no = st.session_state.roll_no_list[0]
+        csv_data = uploaded_file.getvalue().decode("utf-8")
+        st.session_state.title, data = csv_data.split('\n', 1)
+        st.session_state.data = pd.read_csv(StringIO(data))
+        st.session_state.roll_no_list = st.session_state.data['Roll No'].to_list()
+        st.session_state.roll_no = st.session_state.roll_no_list[0]
         st.experimental_rerun()
 
 if st.session_state.uploaded_data is not None:
@@ -144,10 +146,13 @@ if st.session_state.uploaded_data is not None:
         if st.button("Next"):
             # add the detected marks 'a' to the st.session_state.data
             # update st.session_state.uploaded_data with updated st.session_state.data
-            # change rollnumber to next
-            # make st.session_state.marks  and st.session_state.confidence to null
+
+            # st.session_state.roll_no = st.session_state.roll_no_list[st.session_state.roll_no_list.index(st.session_state.roll_no) + 1] if st.session_state.roll_no_list.index(st.session_state.roll_no) < len(st.session_state.roll_no_list)
+
+            # st.session_state.marks = table
+            # st.session_state.confidence = table
             # st.session_state.image = None:
             pass
-        st.dataframe(st.session_state.uploaded_data)
+        st.dataframe(st.session_state.data)
         updated_data = st.session_state.uploaded_data
         # download button

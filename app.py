@@ -66,5 +66,8 @@ if uploaded_file is not None:
 
     editable = not st.toggle("Edit")
     a = st.data_editor(styled_marks, disabled=editable)
+    for q, value in a.to_dict().items():
+        marks[int(q)] = [mark for mark in value.values()]
+    print(marks)
 else:
     st.write("Please upload an image to proceed.")

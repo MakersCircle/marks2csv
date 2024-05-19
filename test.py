@@ -81,8 +81,9 @@ if st.session_state.uploaded_data is not None:
 
     with image_section:
 
-        # code to display name and roll number
-        st.subheader(st.session_state.data.loc[st.session_state.data[st.session_state.data['Roll No'] == st.session_state.roll_no].index.tolist()[0],"Name"])
+        # show name of current student
+        st.subheader(st.session_state.data.loc[st.session_state.data[st.session_state.data['Roll No'] == st.session_state.roll_no].index.tolist()[0], "Name"])
+
         image_array = None
         if st.session_state.source == "Upload Image":
             uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "png", "jpeg"])
@@ -150,7 +151,7 @@ if st.session_state.uploaded_data is not None:
 
             # st.session_state.uploaded_data = st.session_state.title + '\n' + st.session_state.data.to_csv(index=False)
 
-            # st.session_state.roll_no = st.session_state.roll_no_list[st.session_state.roll_no_list.index(st.session_state.roll_no) + 1] if st.session_state.roll_no_list.index(st.session_state.roll_no) < len(st.session_state.roll_no_list) else st.session_state.roll_no_list[0]
+            # st.session_state.roll_no = st.session_state.roll_no_list[(st.session_state.roll_no_list.index(st.session_state.roll_no) + 1) % len(st.session_state.roll_no_list)]
 
             # st.session_state.marks = table
             # st.session_state.confidence = table

@@ -123,7 +123,7 @@ if st.session_state.uploaded_data is not None:
             st.session_state.confidence = {1: [0.989, 0.995, 1.0],
                                            2: [0.997, 1.0, 1.0],
                                            3: [0.998, 1.0, 0.997],
-                                           4: [0.97, 1.0, 1.0],
+                                           4: [0.9, 1.0, 1.0],
                                            5: [0.999, 0.999, 1.0],
                                            6: [1.0, 0.999, 1.0],
                                            7: [0.998, 0.999, 1.0],
@@ -137,7 +137,7 @@ if st.session_state.uploaded_data is not None:
             st.image(warped_image, caption="Uploaded Image", width=500)
 
         else:
-            st.image("https://placehold.co/500x634?text=Provide+an+image", width=500)
+            st.image("https://placehold.co/500x634?text=Image+Preview", width=500)
 
     with table_section:
         styled_marks = style_based_on_confidence(pd.DataFrame(st.session_state.marks),
@@ -146,7 +146,7 @@ if st.session_state.uploaded_data is not None:
         a = st.data_editor(styled_marks, disabled=editable)
         for q, value in a.to_dict().items():
             st.session_state.marks[int(q)] = [mark for mark in value.values()]
-        if st.button("Next"):
+        if st.button("Next", type="primary"):
             # add the detected marks 'a' to the st.session_state.data
 
             # st.session_state.uploaded_data = st.session_state.title + '\n' + st.session_state.data.to_csv(index=False)
@@ -159,4 +159,4 @@ if st.session_state.uploaded_data is not None:
             pass
         st.dataframe(st.session_state.data)
         updated_data = st.session_state.uploaded_data
-        # download button
+        st.button("Download")

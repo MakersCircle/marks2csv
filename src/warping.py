@@ -139,9 +139,9 @@ def warp(image):
     return warped
 
 
-if __name__ == '_main_':
-    file_number = "1"
+if __name__ == '__main__':
+    file_number = "2"
     src_path = f"../test_images/original/original_img_{file_number}.jpg"
     warped_image = warp(cv2.imread(src_path))
-    dest_path = f"../test_images/warped/warped_img_{file_number}.jpg"
-    cv2.imwrite('', warped_image)
+    dest_path = f"../test_images/warpped/warpped_img_{file_number}.jpg"
+    cv2.imwrite(dest_path, warped_image)

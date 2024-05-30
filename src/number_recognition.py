@@ -17,6 +17,7 @@ type_model_path = os.path.join(model_dir, 'type_model.keras')
 digit_model_path = os.path.join(model_dir, 'digit_model.keras')
 half_model_path = os.path.join(model_dir, 'half_model.keras')
 
+
 type_model = tf.keras.models.load_model(type_model_path)
 digit_model = tf.keras.models.load_model(digit_model_path)
 half_model = tf.keras.models.load_model(half_model_path)

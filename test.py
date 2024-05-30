@@ -68,7 +68,7 @@ if st.session_state.uploaded_data is None:
         st.session_state.data = pd.read_csv(StringIO(data))
         st.session_state.roll_no_list = st.session_state.data['Roll No'].to_list()
         st.session_state.roll_no = st.session_state.roll_no_list[0]
-        st.experimental_rerun()
+        st.rerun()
 
 if st.session_state.uploaded_data is not None:
     # Display the rest of the app after the file is uploaded
@@ -151,12 +151,12 @@ if st.session_state.uploaded_data is not None:
 
             # st.session_state.uploaded_data = st.session_state.title + '\n' + st.session_state.data.to_csv(index=False)
 
-            # st.session_state.roll_no = st.session_state.roll_no_list[(st.session_state.roll_no_list.index(st.session_state.roll_no) + 1) % len(st.session_state.roll_no_list)]
+            st.session_state.roll_no = st.session_state.roll_no_list[(st.session_state.roll_no_list.index(st.session_state.roll_no) + 1) % len(st.session_state.roll_no_list)]
 
             # st.session_state.marks = table
             # st.session_state.confidence = table
             # st.session_state.image = None:
-            pass
+            st.rerun()
         st.dataframe(st.session_state.data)
         updated_data = st.session_state.uploaded_data
         st.button("Download")

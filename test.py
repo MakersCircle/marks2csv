@@ -46,6 +46,18 @@ def mark_column_splitting(column_name):
     return q_no, subpart, max_mark
 
 
+def update_student_marks(session_data, roll_number, marks):
+    student_index = session_data[session_data['Roll No'] == roll_number].index.tolist()[0]
+    for mark_column in session_data.columns[3:-1]:
+        question_no, subpart, max_mark = mark_column_splitting(mark_column)
+        sub_part_no = 0 if subpart is None else subpart
+        mark = marks[question_no][sub_part_no]
+        if mark != 0:
+            print(mark)
+        session_data.at[student_index, mark_column] = np.nan if mark == 0 else mark
+    return session_data
+
+
 def style_based_on_confidence(mark_df, confidence_df, threshold=0.90):
     def apply_style(v, c):
         if v == '0':
@@ -143,20 +155,23 @@ if st.session_state.uploaded_data is not None:
         styled_marks = style_based_on_confidence(pd.DataFrame(st.session_state.marks),
                                                  pd.DataFrame(st.session_state.confidence))
         editable = not st.toggle("Edit")
-        a = st.data_editor(styled_marks, disabled=editable)
-        for q, value in a.to_dict().items():
+        updated_marks = st.data_editor(styled_marks, disabled=editable)
+        for q, value in updated_marks.to_dict().items():
             st.session_state.marks[int(q)] = [mark for mark in value.values()]
         if st.button("Next", type="primary"):
             # add the detected marks 'a' to the st.session_state.data
+            st.session_state.data = update_student_marks(st.session_state.data, st.session_state.roll_no, st.session_state.marks)
 
             # st.session_state.uploaded_data = st.session_state.title + '\n' + st.session_state.data.to_csv(index=False)
 
             st.session_state.roll_no = st.session_state.roll_no_list[(st.session_state.roll_no_list.index(st.session_state.roll_no) + 1) % len(st.session_state.roll_no_list)]
 
-            # st.session_state.marks = table
-            # st.session_state.confidence = table
-            # st.session_state.image = None:
+            st.session_state.marks = table
+            st.session_state.confidence = table
+            st.session_state.image = None
+            print(table)
             st.rerun()
+
         st.dataframe(st.session_state.data)
         updated_data = st.session_state.uploaded_data
         st.button("Download")
